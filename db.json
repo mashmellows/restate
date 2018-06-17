@@ -1,0 +1,80 @@
+[
+    {
+        "type": "Sale",
+        "name": "Auction 9th June, 12:00pm - Unless Sold Prior",
+        "address": "15 Madden Street Seaford Vic 3198",
+        "description": "Be inspired by the possibilities that accompany property, laden with potential, that sits upon a generous 609sqm (approx.) allotment. This alluring single-storey residence is ready for a sleek new look, while offering excellent accommodation for those keen to live in or lease out whilst considering a future extension or redevelopment (STCA). Filled with all the hallmarks to get you started, the home's quality floorplan flows from the entry foyer through to a generous lounge room graced with northern sunshine and highlighted by stylish timber floors. The light-filled and functional kitchen is tiled for easy care and connects to an adjoining casual meals zone via a convenient breakfast bench. Complementing the home's living spaces are three bedrooms; two with built-in-robes, accompanied by a study/4th bedroom, family bathroom with separate toilet plus a laundry. Outside, you'll find a large single car garage that has space enough for a workshop; Whilst the substantial backyard allows plenty of space for the kids to run around and where your vision for a future extension could come to life (STCA). Moments from the beach, schools, shops, parks and major road arterials.",
+        "rooms": 4,
+        "bathrooms": 1,
+        "propertyType": "House",
+        "latitude": "-38.117356000000000",
+        "longitude": "145.148704000000000",
+        "picture": "https://i3.au.reastatic.net/800x600/4e97758b56d6b6b7959c6e95515f15c2264e122c3f1840b35c0351e9392e6a77/main.jpg",
+        "agencyId": 1,
+        "price": "794000"
+    },
+    {
+        "type": "Sale",
+        "name": "Seaford in style! With room for all the toys.",
+        "address": "19 Downs Road Seaford Vic 3198",
+        "description": "We proudly present for sale 19 Downs Road, Seaford. \r\nThis charming and stylish three bedroom brick veneer home offers a great opportunity to enter the popular bayside Seaford property market.\r\nFeatures include two separate living areas, polished hardwood timber floors, new carpet, blinds and fresh light paint through out. \r\n\r\nHuge updated kitchen with ample storage and pull out draws complete with dishwasher and 900 mm gas cooktops.\r\nSunken lounge with gas coonara, \r\nTiled family bathroom with seperate toilet and laundry.\r\n\r\nOutside is where this property really offers huge value, behind the new timber fence you have ample parking for cars, boats and caravans with the added bonus of a secure lock up double carport behind roller doors and the you also have a large work shop/mancave. Making this property ideal for tradies, down sizer's and anyone needing extra car storage. Set on a generous 534 sqms this home also boasts a good size backyard with outdoor entertaining area. A must to inspect this property will not disappoint.",
+        "rooms": 3,
+        "bathrooms": 1,
+        "propertyType": "House",
+        "latitude": "-38.104994000000000",
+        "longitude": "145.147694000000000",
+        "picture": "https://i3.au.reastatic.net/800x600/f0c7d4571ef51417f4e39f6ec44a41f0d0b800f989a577ae7380adbea6b34918/main.jpg",
+        "agencyId": 3,
+        "price": "695000"
+    },
+    {
+        "type": "Rent",
+        "name": "Fabulous 3 Bed Home with Beach Views",
+        "address": "5/107 Nepean Highway Seaford",
+        "description": "A hop skip and a jump onto Seaford Beach, a 2 minute stroll to the shops and cafes and a few minutes walk to Seaford Train Station, with express trains to the City.\r\n\r\nThe third floor will give you privacy with a master suite, ensuite and balcony with seaviews. The second level comprises open plan lounge, kitchen with gas hob, dishwasher and breakfast bar and dining area and the second bedroom with master bathroom.\r\n\r\nThe lower level offers internal access to the double garage, laundry and first bedroom.\r\n\r\nAdditional features: Fully furnished option available @ $100 per week and split system cooling.",
+        "rooms": 3,
+        "bathrooms": 2,
+        "propertyType": "House",
+        "latitude": "-38.101465000000000",
+        "longitude": "145.126026000000000",
+        "picture": "https://i1.au.reastatic.net/640x480/9ed0610c6b4354f6f223f6bb5f59018c7ce94cdf4726cea40e85a23f5dd24c28/main.jpg",
+        "agencyId": 2,
+        "price": "550"
+    },
+    {
+        "type": "Rent",
+        "name": "5 bedroom, 2 bath, 2 living, 5 car!",
+        "address": "26 Carrington Avenue Seaford",
+        "description": "A rare opportunity has transpired with this charming 5 bedroom, 2 bathroom, 2 living area, spacious family home. Features include polished timber floor boards, front two bedroomsh fitted with BIR's, formal lounge with ornamental fire place, family area with coonara wood heater, carpeted 2nd living area with ceiling fan, fantastic kitchen boasting an abundance of cupboard space, timber bench top, stainless steel SMEG appliances comprising 900mm gas cook top, Pyrolytic oven, rangehood & integrated dishwasher. \r\n\r\nFurther features include spacious family bathroom containing separate shower & bath (spa or intercom not in use), three bedrooms, slightly smaller in size, positioned off the hall & separate from the living areas, quality window coverings & plantation shutters, gas ducted heating & evapourative cooling through out. The exterior incorporates its own list of benefits including double carport at the front of the home maintaing under cover entry, plus a single carport & double lock up garage behind double gates plus a large undercover decking perfect for entertainging.",
+        "rooms": 5,
+        "bathrooms": 2,
+        "propertyType": "House",
+        "latitude": "-38.109250000000000",
+        "longitude": "145.148966000000000",
+        "picture": "https://i2.au.reastatic.net/1703x940-resize,extend,r=33,g=40,b=46/71f820114077356908018d3ea84e58b1ef226c1296f5bf01d5eb199e79e05a8f/image2.jpg",
+        "agencyId": 1,
+        "price": "470"
+    }
+]
+
+
+[
+    {
+        "name": "Buxton",
+        "email": "boxhill@buxton.com.au",
+        "phoneNumber": 395839811,
+        "logo": "https://l93r834irft3s9f0a3lsa6e1-wpengine.netdna-ssl.com/wp-content/uploads/2015/11/Buxton-Logo.jpg"
+    },
+    {
+        "name": "Harcourts",
+        "email": "melbournecity@harcourts.com.au",
+        "phoneNumber": 396648100,
+        "logo": "https://melbournecity.harcourts.com.au/Images/Brands/hc_s.png"
+    },
+    {
+        "name": "Eview",
+        "email": "southeast@eview.com.au",
+        "phoneNumber": 387941200,
+        "logo": "http://aws.agentbase.com.au/cas/supplierLogos/15/7-3-2016-12-5241-South-East-C.png"
+    }
+]

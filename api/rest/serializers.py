@@ -24,7 +24,7 @@ class AgentSerializer(serializers.HyperlinkedModelSerializer):
         model = Agent
         fields = '__all__'
 
-class CompanySerializer(serializers.HyperlinkedModelSerializer):
+class AgencySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Company
+        model = Agency
         fields = '__all__'

@@ -1,5 +1,5 @@
 const graphql = require('graphql');
-const _ = require('lodash');
+const axios = require('axios');
 
 const {
   GraphQLObjectType,
@@ -9,36 +9,78 @@ const {
 
 } = graphql;
 
-const users = [
-  {
-    id: '23',
-    firstName: 'Bill',
-    age: 20,
-  },
-  {
-    id: '47',
-    firstName: 'Samantha',
-    age: 21,
-  },
-];
-
-const UserType = new GraphQLObjectType({
-  name: 'User',
+const AgencyType = new GraphQLObjectType({
+  name: 'Agency',
   fields: {
     id: { type: GraphQLString },
-    firstName: { type: GraphQLString },
-    age: { type: GraphQLInt },
+    name: { type: GraphQLString },
+    email: { type: GraphQLString },
+    phoneNumber: { type: GraphQLString },
+    logo: { type: GraphQLString },
   },
 });
+
+const HomeType = new GraphQLObjectType({
+  name: 'Home',
+  fields: {
+    id: { type: GraphQLInt },
+    type: { type: GraphQLString },
+    name: { type: GraphQLString },
+    address: { type: GraphQLString },
+    description: { type: GraphQLString },
+    rooms: { type: GraphQLInt },
+    bathrooms: { type: GraphQLInt },
+    propertyType: { type: GraphQLString },
+    latitude: { type: GraphQLString },
+    longitude: { type: GraphQLString },
+    picture: { type: GraphQLString },
+    agencyId: {
+      type: AgencyType,
+      resolve(parentValue) {
+        return axios.get(`http://localhost:8000/agency/${parentValue.agencyId}/`)
+          .then(res => res.data);
+      },
+    },
+    price: { type: GraphQLString },
+    // agent: {
+    //   type: AgencyType,
+    //   resolve(parentValue) {
+    //     return axios.get(`http://localhost:8000/agent/${parentValue.agentId}/`)
+    //       .then(res => res.data);
+    //   },
+    // },
+  },
+});
+
+// const AgentType = new GraphQLObjectType({
+//   name: 'Agent',
+//   fields: {
+//     id: { type: GraphQLString },
+//     firstName: { type: GraphQLString },
+//     lastName: { type: GraphQLString },
+//     email: { type: GraphQLString },
+//     phoneNumber: { type: GraphQLString },
+//     agency: { type: GraphQLString },
+//     picture: { type: GraphQLString },
+//     age: { type: GraphQLInt },
+//     agencyId: {
+//       type: AgencyType,
+//       resolve(parentValue) {
+//         return axios.get(`http://localhost:8000/agency/${parentValue.agencyId}/`)
+//           .then(res => res.data);
+//       },
+//   },
+// });
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
-    user: {
-      type: UserType,
-      args: { id: { type: GraphQLString } },
+    home: {
+      type: HomeType,
+      args: { id: { type: GraphQLInt } },
       resolve(parentValue, args) {
-        return _.find(users, { id: args.id });
+        return axios.get(`http://localhost:8000/homes/${args.id}/`)
+          .then(res => res.data);
       },
     },
   },

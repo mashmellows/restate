@@ -37,5 +37,5 @@ class AgencyViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Company.objects.all()
-    serializer_class = CompanySerializer
+    queryset = Agency.objects.all()
+    serializer_class = AgencySerializer
