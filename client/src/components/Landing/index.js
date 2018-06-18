@@ -6,7 +6,7 @@ import { BarLoader } from 'react-spinners';
 import ReactMapboxGl, { Layer, Feature, Popup, Marker } from "react-mapbox-gl";
 import { ZoomControl } from "react-mapbox-gl";
 import Rodal from 'rodal';
-import { Tooltip } from 'react-bootstrap';
+import { Tooltip, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 import './app.css';
 import 'rodal/lib/rodal.css';
@@ -14,8 +14,6 @@ import 'rodal/lib/rodal.css';
 const Map = ReactMapboxGl({
   accessToken: "pk.eyJ1IjoieHVyYSIsImEiOiJjamlpam5mczQxdGZjM3F0NDU4d2Z5NWJ2In0.bStw02eNHWj4PhkmzWDeOg"
 });
-
-
 
 class LandingPage extends Component {
 
@@ -27,11 +25,43 @@ class LandingPage extends Component {
       visible: false,
       distance: null,
       popup: false,
+      value: '',
+      filter: [],
+      marker: false,
     }
     // state binding
     this.showPosition = this.showPosition.bind(this);
     this.show = this.show.bind(this);
     this.haversine = this.haversine.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.dataStore = this.dataStore.bind(this);
+
+  }
+
+  hasWhiteSpace(word) {
+    return word.indexOf(' ') >= 0;
+  }
+
+  handleChange(e) {
+    try {
+      let splitValues = e.target.value.split(' ')
+
+      this.setState({ filter: splitValues })
+      this.setState({ value: e.target.value });
+
+      if (e.target.value === '') {
+        this.setState({ filter: [] })
+      }
+      if (this.state.filter[0].length < 1) {
+        this.setState({ filter: [] })
+      }
+
+      this.dataStore()
+
+    } catch(error) {
+        return null
+    }
+
 
   }
 
@@ -44,8 +74,29 @@ class LandingPage extends Component {
     this.setState({ visible: false });
   }
 
-  dataStore() {
-    return this.props.data.homes
+  dataStore(dataObject) {
+
+    let filteredWords = []
+    let wordBool = false
+
+    try {
+      let descriptionArray = dataObject.description.split(' ')
+      let nameArray = dataObject.name.split(' ')
+      let addressArray = dataObject.address.split(' ')
+      let typeArray = dataObject.type.split(' ')
+
+      filteredWords = [...filteredWords, ...descriptionArray, ...nameArray, ...addressArray, ...typeArray]
+
+      for (let y = 0; y < this.state.filter.length; y++) {
+        wordBool = filteredWords.includes(this.state.filter[y] || this.state.filter[y].toUpperCase())
+      }
+
+      return wordBool
+    } catch(error) {
+      return false
+
+    }
+
   }
 
   haversine(targetCoordinates, data) {
@@ -101,6 +152,7 @@ class LandingPage extends Component {
     this.setState({ popup: true })
   }
 
+
   render() {
 
     if (this.props.data.loading) {
@@ -109,6 +161,22 @@ class LandingPage extends Component {
 
     return (
       <div>
+
+        <div className='search-bar'>
+          <form>
+            <FormGroup
+              controlId="formBasicText"
+            >
+              <ControlLabel>Filter Results</ControlLabel>
+              <FormControl
+                type="text"
+                value={this.state.value}
+                placeholder="Type Here!"
+                onChange={this.handleChange}
+              />
+            </FormGroup>
+          </form>
+        </div>
 
         <Rodal width={800} height={600} visible={this.state.visible} onClose={this.hide.bind(this)}>
           {this.state.data !== null &&
@@ -141,8 +209,9 @@ class LandingPage extends Component {
                 ))
               }
             </Layer>
-            {
-              this.props.data.homes.map(k => (
+            {this.state.filter.length === 0 &&
+              this.props.data.homes.map(k =>
+                (
                 <div>
                     <Popup
                       className='popup-marker-v1'
@@ -154,6 +223,33 @@ class LandingPage extends Component {
                         <div className='popup-marker-v1'>{k.type} / ${k.price}</div>
 
                     </Popup>
+
+                  <Marker
+                    coordinates={[k.longitude, k.latitude]}
+                    onClick={() => this.haversine([parseFloat(k.longitude), parseFloat(k.latitude)], k)}
+                    anchor="bottom">
+                    <img src={'http://maps.google.com/mapfiles/ms/icons/red-dot.png'}/>
+                  </Marker>
+                </div>
+              ))
+            }
+
+            {this.state.filter.length !== 0 &&
+              this.props.data.homes.map(k => (
+                <div>
+                  {this.dataStore(k) &&
+                    <Popup
+                      className='popup-marker-v1'
+                      coordinates={[k.longitude, k.latitude]}
+                      offset={{
+                        'bottom-left': [12, -38],  'bottom': [0, -10], 'bottom-right': [-12, -38]
+                      }}>
+
+                        <div className='popup-marker-v1'>{k.type} / ${k.price}</div>
+
+                    </Popup>
+                  }
+
                   <Marker
                     coordinates={[k.longitude, k.latitude]}
                     onClick={() => this.haversine([parseFloat(k.longitude), parseFloat(k.latitude)], k)}
