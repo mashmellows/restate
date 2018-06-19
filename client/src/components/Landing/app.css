@@ -38,3 +38,9 @@
   -moz-box-shadow: 10px 10px 20px 8px rgba(0,0,0,0.06);
   -webkit-box-shadow: 10px 10px 20px 8px rgba(0,0,0,0.06);
 }
+
+.house-image {
+  margin-left: 150px;
+  width: 500px;
+  height: 400px;
+}
