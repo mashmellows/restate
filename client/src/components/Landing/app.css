@@ -1,28 +1,40 @@
 .loader {
-  margin-left: 50%;
   margin-top: 25%;
+  margin-left: 50%;
 }
 
 .popup-marker-v1 {
-
   width: 100px;
   font-weight: bold;
 }
 
+.button-group {
+  z-index: 10;
+  margin-left: 88%;
+  margin-top: 47%;
+  position: absolute;
+
+}
+
+.btn-default {
+  background-image: none;
+  margin-right: 5px;
+  border-radius: 100px !important;
+}
 .search-bar {
-  margin-left: 20px;
+  z-index: 10;
+  width: 300px;
   margin-top: 20px;
+  font-weight: bold;
+  margin-left: 20px;
+  padding-top: 20px;
+  padding-left: 10px;
+  border-radius: 5px;
   margin-right: 20px;
   position: absolute;
-  font-weight: bold;
-  z-index: 10;
-  background-color: white;
-  width: 300px;
   padding-right: 10px;
-  padding-left: 10px;
-  padding-top: 20px;
-  border-radius: 5px;
+  background-color: white;
+  box-shadow: 5px 5px 10px 5px rgba(0,0,0,0.06);
+  -moz-box-shadow: 10px 10px 20px 8px rgba(0,0,0,0.06);
   -webkit-box-shadow: 10px 10px 20px 8px rgba(0,0,0,0.06);
-	-moz-box-shadow: 10px 10px 20px 8px rgba(0,0,0,0.06);
-	box-shadow: 5px 5px 10px 5px rgba(0,0,0,0.06);
 }

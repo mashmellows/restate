@@ -1,73 +1,89 @@
-/* eslint-disable */
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { BarLoader } from 'react-spinners';
-import ReactMapboxGl, { Layer, Feature, Popup, Marker } from "react-mapbox-gl";
-import { ZoomControl } from "react-mapbox-gl";
+import ReactMapboxGl, { Layer, Feature, Popup, Marker, ZoomControl } from 'react-mapbox-gl';
 import Rodal from 'rodal';
-import { Tooltip, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-
-import './app.css';
+import { FormGroup, FormControl, ControlLabel, ButtonGroup, Button } from 'react-bootstrap';
+import * as TI from 'react-icons/lib/ti';
 import 'rodal/lib/rodal.css';
+import * as config from '../../stores/config';
+import './app.css';
 
 const Map = ReactMapboxGl({
-  accessToken: "pk.eyJ1IjoieHVyYSIsImEiOiJjamlpam5mczQxdGZjM3F0NDU4d2Z5NWJ2In0.bStw02eNHWj4PhkmzWDeOg"
+  accessToken: config.MAPBOX_KEY,
 });
 
 class LandingPage extends Component {
-
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       data: null,
       center: [144.963169, -37.814251],
       visible: false,
       distance: null,
-      popup: false,
       value: '',
       filter: [],
-      marker: false,
-    }
+      mapType: 'mapbox://styles/mapbox/streets-v9',
+      target: [],
+    };
     // state binding
     this.showPosition = this.showPosition.bind(this);
     this.show = this.show.bind(this);
+    this.hide = this.hide.bind(this);
     this.haversine = this.haversine.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.dataStore = this.dataStore.bind(this);
-
+    this.mapChanger = this.mapChanger.bind(this);
+    this.mapMover = this.mapMover.bind(this);
   }
 
-  hasWhiteSpace(word) {
-    return word.indexOf(' ') >= 0;
+  componentDidMount() {
+    this.getLocation();
+  }
+
+  getLocation() {
+    // disabling next line due to eslint not understanding navigator.
+    // eslint-disable-next-line
+    if (navigator.geolocation) {
+      // disabling next line due to eslint not understanding navigator.
+      // eslint-disable-next-line
+      navigator.geolocation.getCurrentPosition(this.showPosition);
+    } else {
+      return null;
+    }
+    return true;
+  }
+
+  showPosition(position) {
+    const coordinates = [position.coords.longitude, position.coords.latitude];
+    this.setState({ center: coordinates });
   }
 
   handleChange(e) {
     try {
-      let splitValues = e.target.value.split(' ')
+      const splitValues = e.target.value.split(' ');
 
-      this.setState({ filter: splitValues })
+      this.setState({ filter: splitValues });
       this.setState({ value: e.target.value });
 
       if (e.target.value === '') {
-        this.setState({ filter: [] })
+        this.setState({ filter: [] });
       }
       if (this.state.filter[0].length < 1) {
-        this.setState({ filter: [] })
+        this.setState({ filter: [] });
       }
 
-      this.dataStore()
-
-    } catch(error) {
-        return null
+      this.dataStore();
+      return null;
+    } catch (error) {
+      return null;
     }
-
-
   }
 
-  show(data) {
+  show(value) {
     this.setState({ visible: true });
-    this.setState({ data: data });
+    this.setState({ data: value });
   }
 
   hide() {
@@ -75,94 +91,97 @@ class LandingPage extends Component {
   }
 
   dataStore(dataObject) {
-
-    let filteredWords = []
-    let wordBool = false
-
+    let filteredWords = [''];
     try {
-      let descriptionArray = dataObject.description.split(' ')
-      let nameArray = dataObject.name.split(' ')
-      let addressArray = dataObject.address.split(' ')
-      let typeArray = dataObject.type.split(' ')
+      const descriptionArray = dataObject.description.split(' ');
+      const nameArray = dataObject.name.split(' ');
+      const addressArray = dataObject.address.split(' ');
+      const typeArray = dataObject.type.split(' ');
 
-      filteredWords = [...filteredWords, ...descriptionArray, ...nameArray, ...addressArray, ...typeArray]
+      // use ... over concat due to ES6 way.
+      filteredWords = [
+        ...filteredWords,
+        ...descriptionArray,
+        ...nameArray,
+        ...addressArray,
+        ...typeArray,
+        ...[dataObject.propertyType],
+      ];
 
-      for (let y = 0; y < this.state.filter.length; y++) {
-        wordBool = filteredWords.includes(this.state.filter[y] || this.state.filter[y].toUpperCase())
-      }
+      filteredWords = filteredWords.join('|').toLowerCase().split('|');
+      return this.state.filter.every(item => filteredWords.indexOf(item.toLowerCase()) !== -1);
+    } catch (error) {
+      return false;
+    }
+  }
 
-      return wordBool
-    } catch(error) {
-      return false
+  mapMover(homeObject) {
+    this.setState({ center: [homeObject.longitude, homeObject.latitude] });
+  }
 
+  mapChanger(type) {
+    // I could do it much simply by using an Object with mapped data values.
+    if (type === 'Light') {
+      this.setState({ mapType: 'mapbox://styles/mapbox/light-v9' });
     }
 
+    if (type === 'Dark') {
+      this.setState({ mapType: 'mapbox://styles/mapbox/dark-v9' });
+    }
+
+    if (type === 'Streets') {
+      this.setState({ mapType: 'mapbox://styles/mapbox/streets-v9' });
+    }
+
+    if (type === 'Satellite') {
+      this.setState({ mapType: 'mapbox://styles/mapbox/satellite-v9' });
+    }
   }
 
   haversine(targetCoordinates, data) {
-
     // haversine formula ACOS(SIN(Lat1)*SIN(Lat2) +COS(Lat1)*COS(Lat2)*COS(Lon2-Lon1)) *6371
     // this does not account for roads. Just straightline distance.
-    // Way around it would be to put lat/long points on the road path and then sum up the total distance.
 
-    let earthRadius = 6371;
+    const earthRadius = 6371;
 
-    let userCoordinates = this.state.center;
+    const userCoordinates = this.state.center;
 
-    let userLat = userCoordinates[1]
-    let userLong = userCoordinates[0]
+    const userLat = userCoordinates[1];
+    const userLong = userCoordinates[0];
 
-    let targetLat = targetCoordinates[1];
-    let targetLong = targetCoordinates[0];
+    const targetLat = targetCoordinates[1];
+    const targetLong = targetCoordinates[0];
 
-    let deltaLat = (targetLat-userLat) * (Math.PI / 180)
-    let deltaLong = (targetLong-userLong) * (Math.PI / 180)
+    const deltaLat = (targetLat - userLat) * (Math.PI / 180);
+    const deltaLong = (targetLong - userLong) * (Math.PI / 180);
 
-    let value = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) + Math.cos(userLat) * Math.cos(targetLat) * Math.sin(deltaLong / 2) * Math.sin(deltaLong / 2)
-    let calculate = 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1-value))
+    const sinDelta = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2);
 
-    let haversine = earthRadius * calculate
+    const cosDelta = Math.cos(userLat) *
+      Math.cos(targetLat) * Math.sin(deltaLong / 2) *
+      Math.sin(deltaLong / 2);
 
-    this.setState({ distance: haversine })
+    const value = sinDelta + cosDelta;
+    const calculate = 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
+
+    const haversine = earthRadius * calculate;
+
+    this.setState({ distance: haversine });
 
     this.show(data);
   }
 
-
-  getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(this.showPosition);
-
-    } else {
-        alert('Geolocation is not supported on this browser')
-      }
-  }
-
-  showPosition(position) {
-    let coordinates = [position.coords.longitude, position.coords.latitude]
-
-    this.setState({ center: coordinates})
-  }
-
-  componentDidMount() {
-    this.getLocation()
-  }
-
-  showTooltip() {
-    this.setState({ popup: true })
-  }
-
-
   render() {
-
+    // disabling next line due to proptype validation
+    // eslint-disable-next-line
     if (this.props.data.loading) {
-      return <div className='loader'> <BarLoader color={'#7d82b5'}/> </div>
+      return <div className="loader"> <BarLoader color="#7d82b5" />   </div>;
     }
 
     return (
       <div>
 
-        <div className='search-bar'>
+        <div className="search-bar">
           <form>
             <FormGroup
               controlId="formBasicText"
@@ -178,7 +197,18 @@ class LandingPage extends Component {
           </form>
         </div>
 
-        <Rodal width={800} height={600} visible={this.state.visible} onClose={this.hide.bind(this)}>
+        <div className="button-group">
+
+          <ButtonGroup>
+            <Button onClick={() => this.mapChanger('Light')}><TI.TiEyeOutline color="#63A29C" size={20} /></Button>
+            <Button onClick={() => this.mapChanger('Dark')}><TI.TiEye color="#63A29C" size={20} /></Button>
+            <Button onClick={() => this.mapChanger('Streets')}><TI.TiMap color="#63A29C" size={20} /></Button>
+            <Button onClick={() => this.mapChanger('Satellite')}><TI.TiWorldOutline color="#63A29C" size={20} /></Button>
+          </ButtonGroup>
+
+        </div>
+
+        <Rodal width={800} height={600} visible={this.state.visible} onClose={() => this.hide()}>
           {this.state.data !== null &&
             <div>
               <div> {this.state.data.name} </div>
@@ -190,82 +220,117 @@ class LandingPage extends Component {
         </Rodal>
 
         <Map
-          style="mapbox://styles/mapbox/streets-v9"
+          // eslint-disable-next-line
+          style={this.state.mapType}
           center={this.state.center}
           containerStyle={{
-            height: "100vh",
-            width: "100vw"
+            height: '100vh',
+            width: '100vw',
           }}
-          >
-            <Layer type="circle" id="marker" radius={400} fillColor='#f87362'>
-              {
-                this.props.data.homes.map(k => (
-                    <Feature
-                      coordinates={[k.longitude, k.latitude]}
-                      onMouseEnter={() => <Tooltip/>}
-                      key={k}
-                    />
+        >
+          <Layer type="circle" id="marker" radius={400} fillColor="#f87362">
 
-                ))
-              }
-            </Layer>
-            {this.state.filter.length === 0 &&
+            {/* /* disabling next line due to proptype validation */}
+            {/* eslint-disable-next-line */}
+            {this.props.data.homes.map(k => (
+              <Feature
+                coordinates={[k.longitude, k.latitude]}
+                key={k}
+              />
+              ))
+            }
+          </Layer>
+
+          <Popup
+            className="popup-marker-v1"
+            coordinates={this.state.center}
+            offset={{
+              // eslint-disable-next-line
+              'bottom-left': [12, -38], 'bottom': [0, -10], 'bottom-right': [-12, -38],
+            }}
+          >
+            <div className="popup-marker-v1">
+              You are Here!
+            </div>
+          </Popup>
+
+          <Marker
+            coordinates={this.state.center}
+            anchor="bottom"
+          >
+            <img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png" alt="marker" />
+          </Marker>
+          {this.state.filter.length === 0 &&
               this.props.data.homes.map(k =>
                 (
-                <div>
+                  <div>
                     <Popup
-                      className='popup-marker-v1'
+                      className="popup-marker-v1"
                       coordinates={[k.longitude, k.latitude]}
                       offset={{
-                        'bottom-left': [12, -38],  'bottom': [0, -10], 'bottom-right': [-12, -38]
-                      }}>
-
-                        <div className='popup-marker-v1'>{k.type} / ${k.price}</div>
-
+                        // eslint-disable-next-line
+                        'bottom-left': [12, -38], 'bottom': [0, -10], 'bottom-right': [-12, -38],
+                      }}
+                    >
+                      <div className="popup-marker-v1">
+                        {k.type}
+                      </div>
+                      <div className="popup-marker-v1">
+                        Price: ${k.price}
+                      </div>
                     </Popup>
 
-                  <Marker
-                    coordinates={[k.longitude, k.latitude]}
-                    onClick={() => this.haversine([parseFloat(k.longitude), parseFloat(k.latitude)], k)}
-                    anchor="bottom">
-                    <img src={'http://maps.google.com/mapfiles/ms/icons/red-dot.png'}/>
-                  </Marker>
-                </div>
+                    <Marker
+                      coordinates={[k.longitude, k.latitude]}
+                      onClick={() => this.haversine(
+                        [parseFloat(k.longitude), parseFloat(k.latitude)],
+                        k,
+                      )}
+                      anchor="bottom"
+                    >
+                      <img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png" alt="marker" />
+                    </Marker>
+                  </div>
               ))
             }
 
-            {this.state.filter.length !== 0 &&
+          {this.state.filter.length !== 0 &&
               this.props.data.homes.map(k => (
                 <div>
                   {this.dataStore(k) &&
                     <Popup
-                      className='popup-marker-v1'
+                      className="popup-marker-v1"
                       coordinates={[k.longitude, k.latitude]}
                       offset={{
+                        // eslint-disable-next-line
                         'bottom-left': [12, -38],  'bottom': [0, -10], 'bottom-right': [-12, -38]
-                      }}>
-
-                        <div className='popup-marker-v1'>{k.type} / ${k.price}</div>
-
+                      }}
+                    >
+                      <div className="popup-marker-v1">Price: ${k.price}</div>
                     </Popup>
                   }
 
                   <Marker
                     coordinates={[k.longitude, k.latitude]}
-                    onClick={() => this.haversine([parseFloat(k.longitude), parseFloat(k.latitude)], k)}
-                    anchor="bottom">
-                    <img src={'http://maps.google.com/mapfiles/ms/icons/red-dot.png'}/>
+                    onClick={() => this.haversine(
+                      [parseFloat(k.longitude), parseFloat(k.latitude)],
+                      k,
+                    )}
+                    anchor="bottom"
+                  >
+                    <img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png" alt="marker" />
                   </Marker>
                 </div>
               ))
             }
 
-          <ZoomControl/>
+          <ZoomControl />
         </Map>
       </div>
-    )
+    );
   }
 }
+
 
 const query = gql`
   {
@@ -276,6 +341,7 @@ const query = gql`
       latitude,
       longitude,
       description,
+      propertyType,
       price,
     }
   }
