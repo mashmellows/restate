@@ -39,21 +39,20 @@ const fireDBConfig = {
 /**
 * @description
 * createStoreWithFirebase
-* Uses the haversine formula to calculate distance between your position and filtered homes.
-* Ref: https://en.wikipedia.org/wiki/Haversine_formula
-* @param {reactReduxFirebase} = array that contains the home position (lat/long)
-* @param {firebase} = array that contains the home position (lat/long)
-* @param {fireDBConfig} = Object with home related data.
-* @param {createStore} = array that contains the home position (lat/long)
+*
+*
+* @param {reactReduxFirebase} =
+* @param {firebase} =
+* @param {fireDBConfig} =
+* @param {createStore} =
 */
 
 const createStoreWithFirebase = compose(reactReduxFirebase(firebase, fireDBConfig))(createStore);
 
 /**
-* @description
-* rootReducer
-* Uses the haversine formula to calculate distance between your position and filtered homes.
-* Ref: https://en.wikipedia.org/wiki/Haversine_formula
+* @description @todo
+*
+*
 */
 
 const rootReducer = combineReducers({
@@ -61,30 +60,25 @@ const rootReducer = combineReducers({
 });
 
 /**
-* @description
-* initialState
-* Uses the haversine formula to calculate distance between your position and filtered homes.
-* Ref: https://en.wikipedia.org/wiki/Haversine_formula
+* @description @todo
+*
+*
 */
 
 const initialState = {};
 
 /**
-* @description
-* store
-* Uses the haversine formula to calculate distance between your position and filtered homes.
-* Ref: https://en.wikipedia.org/wiki/Haversine_formula
-* @param {rootReducer} = array that contains the home position (lat/long)
-* @param {initialState} = Object with home related data.
+* @description @todo
+*
+*
 */
 
 const store = createStoreWithFirebase(rootReducer, initialState);
 
 /**
-* @description
-* App
-* Uses the haversine formula to calculate distance between your position and filtered homes.
-* Ref: https://en.wikipedia.org/wiki/Haversine_formula
+* @description @todo
+*
+*
 */
 
 const App = () => (

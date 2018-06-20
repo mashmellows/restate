@@ -16,8 +16,12 @@ import './app.css';
 // config import
 import * as config from '../../stores/config';
 
-// delcare MapboxGL Map using API_KEY
-// key located in ../../stores/config.js
+/**
+* @description
+* delcare MapboxGL Map using API_KEY
+* key located in ../../stores/config.js
+*/
+
 const Map = ReactMapboxGl({
   accessToken: config.MAPBOX_KEY,
 });
@@ -35,8 +39,13 @@ class LandingPage extends Component {
       filter: [],
       mapType: 'mapbox://styles/mapbox/streets-v9',
     };
-    // state binding
-    // binded here instead of function.bind() due to poor readability.
+
+    /**
+    * @description
+    * state binding
+    * binded here instead of function.bind() due to poor readability.
+    */
+
     this.showPosition = this.showPosition.bind(this);
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
@@ -54,7 +63,6 @@ class LandingPage extends Component {
   * @description
   * getLocation()
   * invokes browser geolocation API to fetch user Longitude and Latitude
-  * @param {null}
   * @return {true} = if able to fetch user long/lat using browser API
   * @return {false} = if unable to fetch user long/lat due to user saying NO or unsupported browser
   */
@@ -74,7 +82,7 @@ class LandingPage extends Component {
   * @description
   * showPosition()
   * this function gets the user long/lat and sets it as the component state
-  * @param {position} = Object with User Longitude and Latitude.
+  * @param position = Object with User Longitude and Latitude.
   * @return {null}
   */
 
@@ -89,7 +97,7 @@ class LandingPage extends Component {
   * Use the dynamic values provided by the onChange function @react-bootstrap form.
   * Use the words/letters provided to filter the displayed data.
   * when data is received. It invokes the keywordFilter() function.
-  * @param {userInput} = string value that contains every letter/word typed.
+  * @param userInput = string value that contains every letter/word typed.
   * @return {null}
   */
 
@@ -119,7 +127,7 @@ class LandingPage extends Component {
   * @description
   * This function sets the component states for the @param value and visibile state.
   * this helps to open the Modals via Rodal.
-  * @param {value} = Object that has all the data related to homes.
+  * @param value = Object that has all the data related to homes.
   */
 
   show(value) {
@@ -143,8 +151,8 @@ class LandingPage extends Component {
   * This function takes the home object {dataObject} and splits all the values into a list.
   * It also checks to see if the current typed word is in the list of word.
   * If the word is in the list. It returns true.
-  * @param {dataObject} = home object with all the home related data.
-  * @return {true} = if word has indexed in the list.
+  * @param dataObject = home object with all the home related data.
+  * @return true = if word has indexed in the list.
   */
 
   keywordFilter(dataObject) {
@@ -166,8 +174,12 @@ class LandingPage extends Component {
         ...[dataObject.propertyType],
       ];
 
-      // Patching a mistake in the data submissions.
-      // Sale should be Buy because Sale/Rent makes no sense.
+      /**
+      * @description
+      * Patching a mistake in the data submissions.
+      * Sale should be Buy because Sale/Rent makes no sense.
+      */
+
       if (typeArray[0] === 'Sale') {
         filteredWords.push('Buy');
       }
@@ -183,11 +195,11 @@ class LandingPage extends Component {
   * @description
   * mapChanger()
   * This changes the type of map that is displayed.
-  * @param {type} = string value that has the type of map provided by react-bootstrap button
+  * @param type = string value that has the type of map provided by react-bootstrap button
   */
 
   mapChanger(type) {
-    // I could do it much simply by using an Object with mapped data values.
+    // I could do it much more simpler by using an Object with mapped data values.
     if (type === 'Light') {
       this.setState({ mapType: 'mapbox://styles/mapbox/light-v9' });
     }
@@ -210,13 +222,16 @@ class LandingPage extends Component {
   * haversine()
   * Uses the haversine formula to calculate distance between your position and filtered homes.
   * Ref: https://en.wikipedia.org/wiki/Haversine_formula
-  * @param {targetCoordinates} = array that contains the home position (lat/long)
-  * @param {data} = Object with home related data.
+  * @param targetCoordinates = array that contains the home position (lat/long)
+  * @param data = Object with home related data.
   */
 
   haversine(targetCoordinates, data) {
-    // haversine formula ACOS(SIN(Lat1)*SIN(Lat2) +COS(Lat1)*COS(Lat2)*COS(Lon2-Lon1)) *6371
-    // this does not account for roads. Just straightline distance.
+    /**
+    * @description
+    * haversine formula ACOS(SIN(Lat1)*SIN(Lat2) +COS(Lat1)*COS(Lat2)*COS(Lon2-Lon1)) *6371
+    * this does not account for roads. Just straightline distance.
+    */
 
     const earthRadius = 6371;
 
@@ -247,12 +262,29 @@ class LandingPage extends Component {
     this.show(data);
   }
 
+  /**
+  * @description
+  * render()
+  * Main react Render Component
+  * @return { Component } = Renders and Returns the React Component.
+  */
+
   render() {
-    // disabling next line due to proptype validation
+    /**
+    * @description
+    * disabling next line due to proptype validation
+    * If the GraphQL data is in it's loading state. This will render a loading bar.
+    */
+
     // eslint-disable-next-line
     if (this.props.data.loading) {
       return <div className="loader"> <BarLoader color="#7d82b5" />   </div>;
     }
+
+    /**
+    * @description
+    * If the data is not loading. Return the Main React Component.
+    */
 
     return (
       <div>
@@ -265,8 +297,13 @@ class LandingPage extends Component {
               <ControlLabel>Filter Results</ControlLabel>
               <FormControl
                 type="text"
+
+                /** @description this prop shows the current typed data in the form. */
                 value={this.state.value}
+
                 placeholder="Type Here!"
+
+                /** @description this prop returns real time changes to the handleChange(). */
                 onChange={this.handleChange}
               />
             </FormGroup>
@@ -277,6 +314,15 @@ class LandingPage extends Component {
 
           <ButtonGroup>
             <Button
+
+              /** @description onClick - If the User clicks the Chosen icon.
+              *  @prop onClick - It will change the state of the component to use the Chosen Theme.
+              */
+
+              /** @description disabled - if the current map is the chosen one.
+              * @prop disabled - It disables the button to avoid reclicking..
+               */
+
               onClick={() => this.mapChanger('Light')}
               disabled={this.state.mapType === 'mapbox://styles/mapbox/light-v9'}
             >
@@ -306,6 +352,10 @@ class LandingPage extends Component {
 
         <Rodal width={800} height={600} visible={this.state.visible} onClose={() => this.hide()}>
           {this.state.data !== null &&
+
+            /** @description if the data state is not null Render the contents within the Modal.
+             */
+
             <div>
               <div> {this.state.data.name} </div>
               <div> Address: {this.state.data.address}</div>
@@ -317,7 +367,13 @@ class LandingPage extends Component {
         </Rodal>
 
         <Map
-          // eslint-disable-next-line
+
+          /** @description
+            * Initilizing Map via MapboxGL
+            * @prop style - String: Type of map to be disaplyed.
+            * @prop center - List: With your coordinates
+           */
+
           style={this.state.mapType}
           center={this.state.center}
           containerStyle={{
@@ -331,6 +387,13 @@ class LandingPage extends Component {
             {/* eslint-disable-next-line */}
             {this.props.data.homes.map(home => (
               <Feature
+
+              /** @description
+                * Providing the coordinates from the mapped homes Object.
+                * Places a Feature on those coordinates.
+                * @prop coordinates - List: A List with longitude and latitude.
+               */
+
                 coordinates={[home.longitude, home.latitude]}
                 key={home}
               />
@@ -339,6 +402,12 @@ class LandingPage extends Component {
           </Layer>
 
           <Popup
+
+          /** @description
+            * Places a Popup on the given user coordinates,
+            * @prop coordinates - List: A List with longitude and latitude.
+           */
+
             className="popup-marker-v1"
             coordinates={this.state.center}
             offset={{
@@ -352,6 +421,12 @@ class LandingPage extends Component {
           </Popup>
 
           <Marker
+
+          /** @description
+            * Places a marker on your location.
+            * @prop coordinates - List: User Long/Lat
+           */
+
             coordinates={this.state.center}
             anchor="bottom"
           >
@@ -363,6 +438,13 @@ class LandingPage extends Component {
                   <div>
                     <Popup
                       className="popup-marker-v1"
+
+                      /** @description
+                        * When the user starts to type. It filtes the homes.
+                        * Those filtered homes get a popup with it's type and price.
+                        * @prop coordinates - List: Homes filtered longitude and latitude.
+                       */
+
                       coordinates={[home.longitude, home.latitude]}
                       offset={{
                         // eslint-disable-next-line
@@ -379,6 +461,15 @@ class LandingPage extends Component {
                     </Popup>
 
                     <Marker
+
+                    /** @description
+                      * When the user starts to type. It filtes the homes.
+                      * Those filtered homes get a marker with png.
+                      * It provides the distance to the house via haversin().
+                      * @prop coordinates - List: Homes filtered longitude and latitude.
+                      * @prop onClick - List: Homes filtered longitude and latitude.
+                     */
+
                       coordinates={[home.longitude, home.latitude]}
                       onClick={() => this.haversine(
                         [parseFloat(home.longitude), parseFloat(home.latitude)],
@@ -397,6 +488,13 @@ class LandingPage extends Component {
                 <div>
                   {this.keywordFilter(home) &&
                     <Popup
+
+                    /** @description @todo
+                      *
+                      *
+                      * @prop coordinates - The Mapped Objects longitude and latitude.
+                     */
+
                       className="popup-marker-v1"
                       coordinates={[home.longitude, home.latitude]}
                       offset={{
@@ -410,6 +508,14 @@ class LandingPage extends Component {
                   }
 
                   <Marker
+
+                  /** @description @todo
+                    *
+                    *
+                    * @prop coordinates - The Mapped Objects longitude and latitude.
+                    * @prop onClick - List: Homes filtered longitude and latitude.
+                   */
+
                     coordinates={[home.longitude, home.latitude]}
                     onClick={() => this.haversine(
                       [parseFloat(home.longitude), parseFloat(home.latitude)],
@@ -430,6 +536,10 @@ class LandingPage extends Component {
   }
 }
 
+/**
+* @description
+* This is the raw GraphQL query converted to a string.
+*/
 
 const query = gql`
   {
@@ -450,5 +560,12 @@ const query = gql`
     }
   }
 `;
+
+/**
+* @description
+* Exporting the Component wrapped with the GraphQL query.
+* @param query - GraphQL Query via gql
+* @param LandingPage - Our React Component returned via Render.
+*/
 
 export default graphql(query)(LandingPage);
