@@ -18,3 +18,8 @@ restate is a simple experiment using the Django REST Framework + Apollo + GraphQ
 *Running*
 -  **django server** - `npm run server`
 -  **react & express** `npm run dev`
+
+*To do*
+- Redux: `I've added redux bindings for firebase via redux-firebase but have not fully configured it`
+- Firebase: `Original goal was to add user login/signup functionality that used Firebases Realtime DB alongside Redux for state management.`
+- Documentation: `Few Places have no documentation which will be filled later on.`
