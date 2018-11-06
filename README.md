@@ -5,7 +5,7 @@
 restate is a simple experiment using the Django REST Framework + Apollo + GraphQL + React + Express.
 
 **Technology Stack**
-- React - Frontend Framework used in conjuction with webpack.
+- React - Ejected create-react-app for custom functionality.
 - Express & NodeJS - Drives the App Backend along side the GraphQL API Connections to the REST Framework.
 - Apollo & GraphQL - Drives the database querying via the REST Framework.
 - Django REST Framework - Stores the data via SQLite and provides a RESTFul interface.
